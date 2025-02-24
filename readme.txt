@@ -1,3 +1,4 @@
-revisar alertas cada 3 min 
-que indique que pagina se cayo 
-asignar distintas urls 
+Investigar si hay paginas web que puedan monitorearse
+y sean temporales
+revisar reportes mañana
+revisar pruebas temporales
