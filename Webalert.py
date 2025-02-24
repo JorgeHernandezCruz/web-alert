@@ -5,16 +5,16 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Configuración
-WEBSITE_URL = "https://www.ejemplo.com"  # URL de la página web a monitorear
+WEBSITE_URL = "https://smgapicoop.cajasmg.com/"
 CHECK_INTERVAL = 10  # Intervalo de verificación en segundos
 MAX_FAILURES = 3  # Número máximo de fallos consecutivos antes de enviar correo
-EXPECTED_CONTENT = "Bienvenido"  # Texto esperado en la página, puede ajustarse según la página
+EXPECTED_CONTENT = "Bienvenido"  # Cambia este valor por un fragmento de texto que realmente aparezca en la página
 
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL = "jorge.hernandezhtb@gmail.com"  
 PASSWORD = ""  # Contraseña de aplicación para Gmail
-RECIPIENT_EMAIL = "destinatario@ejemplo.com"  # Correo destino para las alertas
+RECIPIENT_EMAIL = "jorge.hernandez@ecorp.com.mx"  # Correo destino para las alertas
 
 def send_email(url):
     """Envía un correo de alerta cuando la página web no responde como se espera."""
@@ -47,7 +47,8 @@ def check_website(url, expected_text=None):
     """
     print(f"Verificando la página web {url}...")
     try:
-        response = requests.get(url, timeout=10)
+        headers = {'User-Agent': 'Mozilla/5.0'}  # Cabecera para simular un navegador
+        response = requests.get(url, timeout=10, headers=headers)
         if response.status_code == 200:
             print(f"La página {url} respondió con código 200.")
             # Si se especifica contenido esperado, verificar que esté presente
