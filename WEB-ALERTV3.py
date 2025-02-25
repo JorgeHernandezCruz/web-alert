@@ -8,7 +8,6 @@ from email.mime.multipart import MIMEMultipart
 WEBSITE_URL = "https://smgapicoop.cajasmg.com/"
 CHECK_INTERVAL = 10  # Intervalo de verificación en segundos
 MAX_FAILURES = 3  # Número máximo de fallos consecutivos antes de enviar correo
-EXPECTED_CONTENT = "API SMG"  # Cambia este valor por un fragmento de texto real de la página
 
 # Configuración del correo
 SMTP_SERVER = 'smtp.gmail.com'
