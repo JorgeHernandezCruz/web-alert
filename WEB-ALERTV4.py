@@ -1,14 +1,24 @@
 import requests
 import time
 import smtplib
+import threading
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# Configuración
-WEBSITE_URL = "https://smgapicoop.cajasmg.com/"
+# Configuración de las páginas a monitorear
+WEBSITE_URLS = [
+    "https://smgapicoop.cajasmg.com/",
+    "https://www.google.com/",
+    "https://www.example.com/"
+]
 CHECK_INTERVAL = 10  # Intervalo de verificación en segundos
 MAX_FAILURES = 3  # Número máximo de fallos consecutivos antes de enviar correo
-EXPECTED_CONTENT = "API SMG"  # Cambia este valor por un fragmento de texto que realmente aparezca en la página
+EXPECTED_CONTENTS = {
+    "https://smgapicoop.cajasmg.com/": "API SMG",
+    "https://www.google.com/": "Google",
+    "https://www.example.com/": "Example Domain"
+}
+
 # Configuración del correo
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
@@ -18,7 +28,7 @@ RECIPIENT_EMAIL = "jorge.hernandez@ecorp.com.mx"  # Correo de destino para las a
 
 def send_email(url):
     """
-    Envía un correo de alerta cuando la página web no responde o no muestra el contenido esperado.
+    Envía un correo de alerta cuando una página web no responde o no muestra el contenido esperado.
     """
     print(f"Enviando correo de alerta para {url}...")
     try:
@@ -72,31 +82,41 @@ def check_website(url, expected_text=None):
         print(f"Error al conectar con {url}: {e}")
         return False
 
-def main():
+def monitor_website(url, expected_text):
     """
-    Bucle principal del script. Monitorea la página web continuamente
-    y envía una alerta si detecta que está caída varias veces consecutivas.
+    Monitorea una página web de manera independiente en un hilo.
     """
-    print("Iniciando monitoreo de la página web...\n")
-    consecutive_failures = 0  # Contador de fallos consecutivos
+    print(f"Iniciando monitoreo para {url}...\n")
+    consecutive_failures = 0  # Contador de fallos consecutivos para esta URL
 
     while True:
-        is_website_ok = check_website(WEBSITE_URL, expected_text=EXPECTED_CONTENT)
+        is_website_ok = check_website(url, expected_text=expected_text)
 
         if is_website_ok:
-            print("Estado: Página web operativa.\n")
+            print(f"{url} está operativa.\n")
             consecutive_failures = 0  # Reiniciar contador al estar OK
         else:
-            print("Estado: Página web caída o sin el contenido esperado.\n")
+            print(f"{url} está caída o sin el contenido esperado.\n")
             consecutive_failures += 1
 
             if consecutive_failures >= MAX_FAILURES:
-                print(f"La página ha fallado {MAX_FAILURES} veces consecutivas. Enviando alerta por correo.")
-                send_email(WEBSITE_URL)
+                print(f"{url} ha fallado {MAX_FAILURES} veces consecutivas. Enviando alerta por correo.")
+                send_email(url)
                 consecutive_failures = 0  # Reiniciar contador después de la alerta
 
-        print(f"Esperando {CHECK_INTERVAL} segundos para la próxima verificación...\n")
+        print(f"Esperando {CHECK_INTERVAL} segundos antes de volver a verificar {url}...\n")
         time.sleep(CHECK_INTERVAL)
 
 if __name__ == "__main__":
-    main()
+    # Crear un hilo para cada página a monitorear
+    threads = []
+    for url in WEBSITE_URLS:
+        expected_text = EXPECTED_CONTENTS.get(url, None)
+        thread = threading.Thread(target=monitor_website, args=(url, expected_text))
+        thread.daemon = True  # Para que los hilos se cierren cuando el programa finaliza
+        thread.start()
+        threads.append(thread)
+
+    # Mantener el programa corriendo indefinidamente
+    for thread in threads:
+        thread.join()
