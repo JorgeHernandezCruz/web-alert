@@ -7,16 +7,29 @@ from email.mime.multipart import MIMEMultipart
 
 # Configuración de las páginas a monitorear
 WEBSITE_URLS = [
-    "https://smgapicoop.cajasmg.com/",
-    "https://www.google.com/",
-    "https://www.example.com/"
+    "https://smgapicoop.cajasmg.com/", #Página web - API SMG
+    "https://cajanet.com/CajaAhorro/Svlt", #APP - Mi Caja SMG
+    "https://app.cajasmg.com/api/v2/auth/sign-in/lookup?identification=VIHS980616HJCDRR09&identification_method=CURP", #APP - Mi Cuenta SMG
+    "https://atuc.entura.com.mx/Login.aspx",#Pagina Web - Atuc Entura
+    "https://cajanet.com/BECSMG/", #Página web - CAJANET
+    "https://cajasmg.com/", #Página web - CAJASMG
+    "https://cloud.entura.com.mx/Login.aspx", #Pagina Web - Entura Cloud
+    "https://sel.entura.com.mx/Login.aspx", #Pagina Web - Entura SEL
+    "https://sit.entura.com.mx:8443/CloudSPEI/" #Pagina Web - Spei Entura
+    
 ]
-CHECK_INTERVAL = 10  # Intervalo de verificación en segundos
+CHECK_INTERVAL = 50  # Intervalo de verificación en segundos
 MAX_FAILURES = 3  # Número máximo de fallos consecutivos antes de enviar correo
 EXPECTED_CONTENTS = {
-    "https://smgapicoop.cajasmg.com/": "API SMG",
-    "https://www.google.com/": "Google",
-    "https://www.example.com/": "Example Domain"
+    "https://smgapicoop.cajasmg.com/": "API SMG", #Página web - API SMG
+    "https://cajanet.com/CajaAhorro/Svlt": " ", #APP - Mi Caja SMG
+    "https://app.cajasmg.com/api/v2/auth/sign-in/lookup?identification=VIHS980616HJCDRR09&identification_method=CURP": "user_name", #APP - Mi Cuenta SMG
+    "https://atuc.entura.com.mx/Login.aspx": "Entidad", #Pagina Web - Atuc Entura
+    "https://cajanet.com/BECSMG/": "NÚMERO DE USUARIO", #Página web - CAJANET
+    "https://cajasmg.com/": "Aviso de Privacidad", #Página web - CAJASMG
+    "https://cloud.entura.com.mx/Login.aspx": "Autenticar", #Pagina Web - Entura Cloud
+    "https://sel.entura.com.mx/Login.aspx": "Iniciar sesión", #Pagina Web - Entura SEL
+    "https://sit.entura.com.mx:8443/CloudSPEI/": "Validar" #Pagina Web - Spei Entura
 }
 
 # Configuración del correo
