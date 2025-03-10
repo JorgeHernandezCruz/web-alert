@@ -36,3 +36,4 @@ def verificar_status_http(urls: dict, intervalo: int = 10):
 
 if __name__ == '__main__':
     verificar_status_http(urls)
+    #Se deja comentario de prueba 
